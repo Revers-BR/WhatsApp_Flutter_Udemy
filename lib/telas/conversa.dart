@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:whats_app_flutter/model/conversa.dart';
 
-class Contatos extends StatefulWidget {
+class Conversas extends StatefulWidget {
   
-  const Contatos({super.key});
+  const Conversas({super.key});
 
   @override
-  State<Contatos> createState() => _Contatos();
+  State<Conversas> createState() => _Conversas();
 }
 
-class _Contatos extends State<Contatos> {
+class _Conversas extends State<Conversas> {
 
   final List<Conversa> listaConversa = [
     const Conversa(
@@ -40,7 +40,7 @@ class _Contatos extends State<Contatos> {
   ];
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { 
     return Scaffold(     
       body: ListView.builder(
         itemCount: listaConversa.length,
@@ -59,6 +59,13 @@ class _Contatos extends State<Contatos> {
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16
+              ),
+            ),
+            subtitle: Text(
+              conversa.mensagem,
+              style: const TextStyle(
+                color: Colors.grey,
+                fontSize: 14
               ),
             ),
           );

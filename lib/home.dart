@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:whats_app_flutter/login.dart';
 import 'package:whats_app_flutter/telas/contatos.dart';
-import 'package:whats_app_flutter/telas/conversas.dart';
+import 'package:whats_app_flutter/telas/conversa.dart';
 
 class Home extends StatefulWidget {
   
@@ -21,10 +23,36 @@ class _Home extends State<Home> {
     )
   ];
 
+  final List<String> itensMenu = [
+    "Configurações","Deslogar"
+  ];
+
   final childrenTabView = [
     const Conversas(),
     const Contatos(),
   ];
+
+  _escolhaMenuItem(String valorSelecionado){
+    
+    switch (valorSelecionado) {
+      case "Configurações":
+        debugPrint("Valor selecionado: $valorSelecionado");
+        break;
+      case "Deslogar":
+        _deslogarUsuario();
+        break;
+    }
+  }
+
+  _deslogarUsuario() async {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+
+    await auth.signOut();
+
+    if(mounted){
+      Navigator.pushReplacementNamed(context, '/login');
+    }
+  }
 
   @override
   Widget build ( BuildContext context ) {
@@ -46,6 +74,19 @@ class _Home extends State<Home> {
             indicatorColor: Colors.white,
             tabs: tabs
           ),
+          actions: [
+            PopupMenuButton<String>(
+              onSelected: _escolhaMenuItem,
+              itemBuilder: (context){
+                return itensMenu.map((String item){
+                  return PopupMenuItem<String>(
+                    value: item,
+                    child: Text(item)
+                  );
+                }).toList();
+              }
+            )
+          ],
         ),
         body: Scaffold(
           body: TabBarView(

@@ -1,6 +1,6 @@
 {
-  "apiKey": "",
-  "appId":  "",
-  "messagingSenderId": "",
-  "projectId": ""
+  "apiKey": "Esse valor é o current_key no google-services",
+  "appId":  "Esse valor é o mobilesdk_app_id no google-services",
+  "messagingSenderId": "Esse valor é o do project_number no google-services",
+  "projectId": "Esse valor é o do project_id no google-services"
 }

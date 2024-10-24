@@ -32,22 +32,15 @@ class _Login extends State<Login> {
         email: email, 
         password: senha
       ).then(( value) =>
-        _irTelaInicial()
+        Navigator.pushReplacementNamed(context, '/home')
       ).catchError((erro){
        
          _erroMsg = "Falha ao tentar se autenticar!";
          debugPrint("Erro auth: $erro");
+
+         return {};
       });    
     }
-  }
-
-  void _irTelaInicial () {
-    Navigator.pushReplacement(
-      context, 
-      MaterialPageRoute(
-        builder: (context) => const  Home()
-      )
-    );
   }
 
   @override
@@ -62,7 +55,7 @@ class _Login extends State<Login> {
         debugPrint("Usuario logado");
         // Adiciona um callback para garantir que o contexto esteja completamente montado
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          _irTelaInicial();
+          Navigator.pushReplacementNamed(context, '/home');
         });
       }
     }
@@ -140,12 +133,7 @@ class _Login extends State<Login> {
                 ),
                 Center(
                   child: GestureDetector(
-                    onTap:() => Navigator.push(
-                      context, 
-                      MaterialPageRoute(
-                        builder: ( context ) => const Cadastro()
-                      )
-                    ),
+                    onTap:() => Navigator.pushReplacementNamed(context, '/cadastro'),
                     child: const Text( 
                       "Não tem conta? Cadastra-se!",
                       style:  TextStyle( color: Colors.white ),
