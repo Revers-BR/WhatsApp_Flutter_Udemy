@@ -1,7 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:whats_app_flutter/cadastro.dart';
-import 'package:whats_app_flutter/home.dart';
 
 class Login extends StatefulWidget {
 

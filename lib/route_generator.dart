@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:whats_app_flutter/cadastro.dart';
+import 'package:whats_app_flutter/configuracoes.dart';
 import 'package:whats_app_flutter/home.dart';
 import 'package:whats_app_flutter/login.dart';
 
@@ -18,6 +19,9 @@ class RouteGenerator {
         break;
       case "/home":
         instancia = const Home();   
+        break;
+      case "/configuracoes":
+        instancia = const Configuracoes();
         break;
       default:
         return _erroRota();
