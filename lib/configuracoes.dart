@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -12,6 +14,11 @@ class Configuracoes extends StatefulWidget {
 
 class _Configuracoes extends State<Configuracoes> {
 
+  File? _imagem;
+  String? idUsuarioLogado;
+  bool _subindImagem = false;
+  String? _urlImagemRecuperada;
+
   void _recuperarImagem(bool camera) async {
 
     final ImageSource source  = camera ? ImageSource.camera : ImageSource.gallery;
@@ -19,10 +26,59 @@ class _Configuracoes extends State<Configuracoes> {
     final XFile? xFile = await ImagePicker().pickImage(source: source);
 
     if(xFile != null){
-      final File imagemSelecionado = File(xFile.path);
-
-      debugPrint(imagemSelecionado.path);
+      setState(() {
+        _subindImagem = true;
+        _imagem = File(xFile.path);
+        _uploadImagem();
+      });
     }
+  }
+
+  _uploadImagem(){
+
+    FirebaseStorage firebaseStorage = FirebaseStorage.instance;
+    Reference refRaiz = firebaseStorage.ref();
+    Reference arquivo = refRaiz
+      .child("perfil")
+      .child("$idUsuarioLogado.jpg");
+
+    UploadTask task = arquivo.putFile(_imagem!);
+
+    task.snapshotEvents.listen((TaskSnapshot snapshot) {
+
+      switch (snapshot.state) {
+        case TaskState.running:
+          _subindImagem = true;
+          break;
+        case TaskState.success:
+          _subindImagem = false;
+          _recuperarImagemURL(snapshot);
+          break;
+        default:
+          break;
+      }
+    });
+  }
+
+  _recuperarImagemURL(TaskSnapshot snapshot) async {
+    String url = await snapshot.ref.getDownloadURL();
+
+    setState(() {
+      _urlImagemRecuperada = url;
+    });
+  }
+
+  _recuperaDadosUsario() {
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    final User? usuarioLogado =  auth.currentUser;
+    if(usuarioLogado != null) idUsuarioLogado = usuarioLogado.uid;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _recuperaDadosUsario();
   }
 
   @override
@@ -39,10 +95,13 @@ class _Configuracoes extends State<Configuracoes> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                const CircleAvatar(
+                _subindImagem ?
+                  const CircularProgressIndicator() :
+                  CircleAvatar(
                   radius: 100,
                   backgroundColor: Colors.grey,
-                  backgroundImage: AssetImage("assets/imagens/perfil2.jpg"),
+                  backgroundImage: _urlImagemRecuperada != null ?
+                      NetworkImage(_urlImagemRecuperada!) : null
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
