@@ -11,7 +11,11 @@ void main() async {
   );
   runApp(MaterialApp(
     theme: ThemeData(
-      primaryColor: const Color(0xff075E54)
+      primaryColor: const Color(0xff075E54),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Color(0xff075E54),
+        foregroundColor: Colors.white,
+      )
     ),
     initialRoute: "/",
     onGenerateRoute: RouteGenerator.generateRoute,

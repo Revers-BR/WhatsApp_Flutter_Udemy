@@ -3,12 +3,17 @@ import 'package:whats_app_flutter/cadastro.dart';
 import 'package:whats_app_flutter/configuracoes.dart';
 import 'package:whats_app_flutter/home.dart';
 import 'package:whats_app_flutter/login.dart';
+import 'package:whats_app_flutter/mensagem.dart';
+import 'package:whats_app_flutter/model/usuario.dart';
 
 class RouteGenerator {
 
   static Route<dynamic> generateRoute(RouteSettings settings){
 
-    dynamic instancia = const Login();
+    Widget instancia = const Login();
+
+    final Usuario? contato = settings.arguments != null
+      ? settings.arguments as Usuario : null;
 
     switch (settings.name) {
       case "/":
@@ -23,6 +28,8 @@ class RouteGenerator {
       case "/configuracoes":
         instancia = const Configuracoes();
         break;
+      case "/mensagem":
+        instancia = Mensagem(contato!);
       default:
         return _erroRota();
     }

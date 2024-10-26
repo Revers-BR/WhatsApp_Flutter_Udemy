@@ -61,8 +61,6 @@ class _Home extends State<Home> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text("WhatsApp"),
-          backgroundColor: const Color(0xff075E54),
-          foregroundColor: Colors.white,
           bottom: TabBar(
             labelColor: Colors.white,
             labelStyle: const TextStyle(
