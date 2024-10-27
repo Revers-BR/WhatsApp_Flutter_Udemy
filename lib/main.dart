@@ -15,6 +15,10 @@ void main() async {
       appBarTheme: const AppBarTheme(
         backgroundColor: Color(0xff075E54),
         foregroundColor: Colors.white,
+      ),
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: Color(0xff075E54),
+        foregroundColor: Colors.white,
       )
     ),
     initialRoute: "/",
