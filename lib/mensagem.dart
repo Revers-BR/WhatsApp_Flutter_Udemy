@@ -23,27 +23,41 @@ class _Mensagem extends State<Mensagem> {
     
   }
 
+  final List<String> mensagens = [
+    "Integer sollicitudin neque sit amet ipsum dignissim, at posuere ipsum laoreet.",
+    "Vivamus scelerisque sem in venenatis consectetur.",
+    "Phasellus tempus purus eu interdum auctor.",
+    "In eget quam at nunc commodo congue nec quis ante.",
+    "Praesent malesuada velit vel turpis viverra facilisis.,"
+
+    "Phasellus varius est sed leo viverra ultrices.",
+    "Sed eget nisi pulvinar magna blandit feugiat id in purus.",
+    "Aliquam ullamcorper neque quis sapien tincidunt, a commodo eros dapibus.",
+    "Integer a sapien imperdiet justo pellentesque semper.",
+    "Donec placerat lorem sit amet mauris sagittis, in blandit urna congue.",
+  ];
+
   @override
   Widget build (BuildContext context ){
 
     final Widget caixaMensagem = Container(
-      padding: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(8),
       child: Row(
         children: [
           Expanded(
             child: Padding(
-              padding: EdgeInsets.only(right: 8),
+              padding: const EdgeInsets.only(right: 8),
               child: TextField(
                 controller: _mensagemController,
                 autofocus: true,
                 keyboardType: TextInputType.text,
-                style: TextStyle(fontSize: 20),
+                style: const TextStyle(fontSize: 20),
                 decoration: InputDecoration(
                   prefix: IconButton(
                     onPressed: _enviarFoto,
-                    icon: Icon(Icons.camera_alt)
+                    icon: const Icon(Icons.camera_alt)
                   ),
-                  contentPadding: EdgeInsets.fromLTRB(4, 2, 32, 8),
+                  contentPadding: const EdgeInsets.fromLTRB(4, 2, 32, 8),
                   hintText: "Digite um mensagem......",
                   filled: true,
                   fillColor: Colors.white,
@@ -55,7 +69,7 @@ class _Mensagem extends State<Mensagem> {
             )
           ),
           FloatingActionButton(
-            child: Icon(Icons.send),
+            child: const Icon(Icons.send),
             mini: true,
             onPressed: _enviarMensagem,
           )
@@ -63,13 +77,51 @@ class _Mensagem extends State<Mensagem> {
       ),
     );
   
+    final Widget listView = Expanded(
+      child: ListView.builder(
+        itemCount: mensagens.length,
+        itemBuilder: (context, index) {
+
+          Alignment alignment = Alignment.centerRight;
+          Color color = const Color(0xffd2ffa5);
+
+          if(index % 2 == 0){
+            alignment = Alignment.centerLeft;
+            color = Colors.white;
+          }
+
+          double larguraContainer = MediaQuery.of(context).size.width * 0.8;
+
+          return Align(
+            alignment: alignment,
+            child: Padding(
+              padding: const EdgeInsetsDirectional.all(16),
+              child: Container(
+                width: larguraContainer,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: BorderRadius.circular(8)
+                ),
+                child: Text(
+                  mensagens[index],
+                  style: const TextStyle(fontSize: 18),
+                ),
+              ),
+            ) 
+            ,
+          );
+        },
+      )
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.contato.nome),
       ),
       body: Container(
         width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage("assets/imagens/bg.png"),
             fit: BoxFit.cover
@@ -77,10 +129,10 @@ class _Mensagem extends State<Mensagem> {
         ),
         child: SafeArea(
           child: Container(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             child: Column(
               children: [
-                Text('ListView'),
+                listView,
                 caixaMensagem,
               ],
             ),
