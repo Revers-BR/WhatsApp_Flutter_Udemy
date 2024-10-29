@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:whats_app_flutter/model/mensagem.dart';
 import 'package:whats_app_flutter/model/usuario.dart';
 
@@ -16,6 +20,7 @@ class Mensagem extends StatefulWidget {
 
 class _Mensagem extends State<Mensagem> {
 
+  bool _subindoImagem = false;
   late String _idUsuarioLogado;
   late String _idUsuarioDestinatario;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -58,8 +63,58 @@ class _Mensagem extends State<Mensagem> {
       .add(msg.toMap());
   }
 
-  void _enviarFoto(){
-    
+  void _enviarFoto() async {
+
+    final XFile? xFile = await ImagePicker().pickImage(source: ImageSource.camera);
+
+    File imagemSelecionado;
+
+    if(xFile != null){
+      _subindoImagem = true;
+
+      imagemSelecionado = File(xFile.path);
+
+      final String nomeImagem = DateTime.now().millisecondsSinceEpoch.toString();
+
+      FirebaseStorage firebaseStorage = FirebaseStorage.instance;
+      Reference refRaiz = firebaseStorage.ref();
+      Reference arquivo = refRaiz
+        .child("mensagens")
+        .child(_idUsuarioLogado)
+        .child("$nomeImagem.jpg");
+
+      UploadTask task = arquivo.putFile(imagemSelecionado);
+
+      task.snapshotEvents.listen((TaskSnapshot snapshot) {
+
+        switch (snapshot.state) {
+          case TaskState.running:
+            _subindoImagem = true;
+            break;
+          case TaskState.success:
+            _subindoImagem = false;
+            _recuperarImagemURL(snapshot);
+            break;
+          default:
+            break;
+        }
+      });
+    } 
+  }
+
+  _recuperarImagemURL(TaskSnapshot snapshot) async {
+    String url = await snapshot.ref.getDownloadURL();
+
+    ModelMensagem mensagem = ModelMensagem();
+
+      mensagem.idUsuario = _idUsuarioLogado;
+      mensagem.mensagem = "";
+      mensagem.tipo = "imagem";
+      mensagem.urlImagem = url;
+
+      _salvarMensagem(_idUsuarioLogado, _idUsuarioDestinatario, mensagem);
+
+      _salvarMensagem(_idUsuarioDestinatario, _idUsuarioLogado, mensagem);     
   }
 
   @override
@@ -85,7 +140,7 @@ class _Mensagem extends State<Mensagem> {
                 decoration: InputDecoration(
                   prefix: IconButton(
                     onPressed: _enviarFoto,
-                    icon: const Icon(Icons.camera_alt)
+                    icon: const Icon(Icons.camera)
                   ),
                   contentPadding: const EdgeInsets.fromLTRB(4, 2, 32, 8),
                   hintText: "Digite um mensagem......",
@@ -101,7 +156,9 @@ class _Mensagem extends State<Mensagem> {
           FloatingActionButton(
             mini: true,
             onPressed: _enviarMensagem,
-            child: const Icon(Icons.send),
+            child: _subindoImagem
+              ? const CircularProgressIndicator()
+              : const Icon(Icons.send_outlined),
           )
         ],
       ),
@@ -161,10 +218,10 @@ class _Mensagem extends State<Mensagem> {
                           color: color,
                           borderRadius: BorderRadius.circular(8)
                         ),
-                        child: Text(
-                          item["mensagem"],
-                          style: const TextStyle(fontSize: 18),
-                        ),
+                        child: item["tipo"] == "imagem"
+                          ? Image.network(item["urlImagem"])
+                          : Text(item["mensagem"],style: const TextStyle(fontSize: 18))
+                           
                       ),
                     ) 
                     ,
