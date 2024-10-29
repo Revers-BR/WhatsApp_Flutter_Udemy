@@ -16,7 +16,7 @@ void main() async {
         backgroundColor: Color(0xff075E54),
         foregroundColor: Colors.white,
       ),
-      floatingActionButtonTheme: FloatingActionButtonThemeData(
+      floatingActionButtonTheme: const FloatingActionButtonThemeData(
         backgroundColor: Color(0xff075E54),
         foregroundColor: Colors.white,
       )

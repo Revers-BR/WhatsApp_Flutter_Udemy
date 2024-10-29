@@ -18,6 +18,7 @@ class _Contatos extends State<Contatos> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   String? _emailUsuarioLogado;
+  // ignore: unused_field
   String? _idUsuarioLogado;
 
   final List<Conversa> listaConversa = [
