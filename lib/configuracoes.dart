@@ -137,10 +137,10 @@ class _Configuracoes extends State<Configuracoes> {
                 _subindoImagem ?
                   const CircularProgressIndicator() :
                   CircleAvatar(
-                  radius: 100,
-                  backgroundColor: Colors.grey,
-                  backgroundImage: _urlImagemRecuperada != null ?
-                      NetworkImage(_urlImagemRecuperada!) : null
+                    radius: 100,
+                    backgroundColor: Colors.grey,
+                    backgroundImage: _urlImagemRecuperada != null ?
+                        NetworkImage(_urlImagemRecuperada!) : null
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

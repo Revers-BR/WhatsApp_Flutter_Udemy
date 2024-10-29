@@ -53,6 +53,20 @@ class _Home extends State<Home> {
     }
   }
 
+  _verificarUsuarioLogado(){
+    final FirebaseAuth auth = FirebaseAuth.instance;
+
+    final usuarioLogado = auth.currentUser;
+
+    if(usuarioLogado == null) Navigator.pushReplacementNamed(context, '/login');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _verificarUsuarioLogado();
+  }
+  
   @override
   Widget build ( BuildContext context ) {
     

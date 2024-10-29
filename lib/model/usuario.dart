@@ -1,5 +1,6 @@
 class Usuario {
   
+  late String idUsuario;
   late String nome;
   late String email;
   late String senha;

@@ -70,8 +70,10 @@ class _Contatos extends State<Contatos> {
       final Map<String, dynamic> data = doc.data();
       
       final Usuario usuario = Usuario();
-
+    
+      usuario.idUsuario = doc.id;
       usuario.nome = data["nome"];
+      usuario.email = data["email"];
       usuario.urlImagem = data["urlImagem"];
 
       return usuario;

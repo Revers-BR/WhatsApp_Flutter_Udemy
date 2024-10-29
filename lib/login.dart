@@ -50,7 +50,6 @@ class _Login extends State<Login> {
       final usuarioLogado = auth.currentUser;
 
       if(usuarioLogado != null){
-        debugPrint("Usuario logado");
         // Adiciona um callback para garantir que o contexto esteja completamente montado
         WidgetsBinding.instance.addPostFrameCallback((_) {
           Navigator.pushReplacementNamed(context, '/home');
