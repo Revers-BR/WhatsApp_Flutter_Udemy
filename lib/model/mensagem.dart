@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class ModelMensagem {
   late String idUsuario;
   String? mensagem;
@@ -9,7 +11,8 @@ class ModelMensagem {
       "idUsuario": idUsuario,
       "mensagem": mensagem,
       "urlImagem": urlImagem,
-      "tipo": tipo
+      "tipo": tipo,
+      "data": Timestamp.now().toString()
     };
   }
 }

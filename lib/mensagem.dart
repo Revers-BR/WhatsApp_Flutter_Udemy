@@ -1,5 +1,5 @@
+import 'dart:async';
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -26,6 +26,8 @@ class _Mensagem extends State<Mensagem> {
   late String _idUsuarioDestinatario;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final ScrollController _scrollController = ScrollController();
+  final StreamController _streamController = StreamController<QuerySnapshot>.broadcast();
 
   final TextEditingController _mensagemController = TextEditingController();
 
@@ -53,6 +55,22 @@ class _Mensagem extends State<Mensagem> {
     }
   }
 
+  _adicionarListenerMemsagem(){
+    final stream = _firestore.collection("mensagens")
+      .doc(_idUsuarioLogado)
+      .collection(_idUsuarioDestinatario)
+      .orderBy("data", descending: false)
+      .snapshots(); 
+
+    stream.listen((event) { 
+      _streamController.add(event);
+
+      Timer(const Duration(seconds: 1), () {
+        if(_scrollController.hasClients)_scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      });
+    });
+  }
+
   _salvarConversa(String idRemetente, String idDestinatario, ModelMensagem msg){
 
     final Conversa conversa = Conversa();
@@ -71,6 +89,8 @@ class _Mensagem extends State<Mensagem> {
     final User? usuarioLogado =  _auth.currentUser;
     if(usuarioLogado != null) _idUsuarioLogado = usuarioLogado.uid;
     _idUsuarioDestinatario = widget.contato.idUsuario;
+
+    _adicionarListenerMemsagem();
   }
 
   _salvarMensagem(String idRemetente, String idDestinatario, ModelMensagem msg){
@@ -184,10 +204,7 @@ class _Mensagem extends State<Mensagem> {
     );
   
     final StreamBuilder streamBuilder = StreamBuilder(
-      stream: _firestore.collection("mensagens")
-                .doc(_idUsuarioLogado)
-                .collection(_idUsuarioDestinatario)
-                .snapshots(), 
+      stream: _streamController.stream,
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
@@ -209,6 +226,7 @@ class _Mensagem extends State<Mensagem> {
 
             return Expanded(
               child: ListView.builder(
+                controller: _scrollController,
                 itemCount: querySnapshot.docs.length,
                 itemBuilder: (context, index) {
 
