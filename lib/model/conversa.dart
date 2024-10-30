@@ -3,18 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Conversa {
   String? idRemetente;
   String? idDestinatario;
-  final String nome;
-  final String mensagem;
-  final String caminhoFoto;
+  late String nome;
+  late String mensagem;
+  late String caminhoFoto;
   String? tipo;
-
-  Conversa(
-    {
-      required this.nome,
-      required this.mensagem,
-      required this.caminhoFoto
-    }
-  );
 
   salvarConversa() {
 

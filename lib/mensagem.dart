@@ -55,12 +55,10 @@ class _Mensagem extends State<Mensagem> {
 
   _salvarConversa(String idRemetente, String idDestinatario, ModelMensagem msg){
 
-    final Conversa conversa = Conversa(
-      nome: widget.contato.nome, 
-      mensagem: msg.mensagem!, 
-      caminhoFoto: widget.contato.urlImagem!
-    );
-
+    final Conversa conversa = Conversa();
+    conversa.nome = widget.contato.nome; 
+    conversa.mensagem = msg.mensagem!;
+    conversa.caminhoFoto = widget.contato.urlImagem!;
     conversa.idRemetente = idRemetente;
     conversa.idDestinatario = idDestinatario;
     conversa.tipo = msg.tipo;
