@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:whats_app_flutter/model/conversa.dart';
 import 'package:whats_app_flutter/model/mensagem.dart';
 import 'package:whats_app_flutter/model/usuario.dart';
 
@@ -44,8 +45,27 @@ class _Mensagem extends State<Mensagem> {
 
       _salvarMensagem(_idUsuarioDestinatario, _idUsuarioLogado, mensagem);
 
+      _salvarConversa(_idUsuarioLogado,_idUsuarioDestinatario,mensagem);
+      
+      _salvarConversa(_idUsuarioDestinatario,_idUsuarioLogado,mensagem);
+
       _mensagemController.clear();
     }
+  }
+
+  _salvarConversa(String idRemetente, String idDestinatario, ModelMensagem msg){
+
+    final Conversa conversa = Conversa(
+      nome: widget.contato.nome, 
+      mensagem: msg.mensagem!, 
+      caminhoFoto: widget.contato.urlImagem!
+    );
+
+    conversa.idRemetente = idRemetente;
+    conversa.idDestinatario = idDestinatario;
+    conversa.tipo = msg.tipo;
+    
+    conversa.salvarConversa();
   }
 
    _recuperaDadosUsario() {
@@ -122,6 +142,7 @@ class _Mensagem extends State<Mensagem> {
     super.initState();
     _recuperaDadosUsario();
   }
+
   @override
   Widget build (BuildContext context ){
 
