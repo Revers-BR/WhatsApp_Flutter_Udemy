@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:whats_app_flutter/model/conversa.dart';
+import 'package:whats_app_flutter/model/usuario.dart';
 
 class Conversas extends StatefulWidget {
   
@@ -107,7 +108,18 @@ class _Conversas extends State<Conversas> {
 
                 final Conversa conversa = conversas[index];
 
+                final Usuario usuario = Usuario();
+
+                usuario.nome = conversa.nome;
+                usuario.idUsuario = conversa.idDestinatario!;
+                usuario.urlImagem = conversa.caminhoFoto;
+
                 return ListTile(
+                   onTap: () => Navigator.pushNamed(
+                      context, 
+                      "/mensagem",
+                      arguments: usuario
+                    ),
                   contentPadding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
                   leading: CircleAvatar(
                     maxRadius: 30,
